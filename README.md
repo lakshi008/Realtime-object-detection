@@ -62,3 +62,4 @@ The aim of this project is to improve safety in surveillance environments by aut
 ```bash
 git clone https://github.com/lakshi008/Realtime-object-detection.git
 cd Realtime-object-detection
+![Demo Output](Screenshot 2026-01-07 231412.png)
