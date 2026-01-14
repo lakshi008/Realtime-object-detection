@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Live Monitoring</h1>
+
+<div class="live-layout">
+    <div class="control-panel">
+        <h3>Monitoring</h3>
+        <button class="btn start" onclick="startDetection()">Start Detection</button>
+        <button class="btn stop" onclick="stopDetection()">Pause</button>
+
+        <div class="stats">
+            <h4>Stats</h4>
+            <div id="stats-box">Loading...</div>
+        </div>
+    </div>
+
+    <div class="video-panel">
+        <span class="live-badge">LIVE</span>
+        <img src="{{ url_for('video_feed') }}">
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

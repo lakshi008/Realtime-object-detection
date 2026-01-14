@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ALERT BANNER -->
+<div id="alertBar" class="alert-bar hidden">
+  <div class="alert-left">
+    <span class="alert-icon">⚠</span>
+    <div class="alert-text">
+      <strong>DANGEROUS OBJECT DETECTED</strong>
+      <span id="alertMessage"></span>
+    </div>
+  </div>
+  <button class="alert-close" onclick="closeAlert()">✕</button>
+</div>
+
+<div class="home-layout">
+
+  <div class="left-panel">
+
+    <div class="settings-card">
+      <h3>Monitoring</h3>
+      <p>Status: <span class="green-text">Active</span></p>
+      <button class="btn red" onclick="pauseDetection()">Pause</button>
+    </div>
+
+    <div class="settings-card">
+      <h3>Stats</h3>
+      <p>Total Detections: <span id="totalCount">0</span></p>
+    </div>
+
+    <div class="settings-card">
+      <h3>Active Dangerous Objects</h3>
+      <p id="dangerText">None</p>
+    </div>
+
+  </div>
+
+  <div class="right-panel">
+    <div class="camera-card">
+      <div class="camera-header">
+        <span>Camera 1 - Main Entrance</span>
+      </div>
+
+      <div class="live-badge">LIVE</div>
+
+      <img src="{{ url_for('video_feed') }}" class="video-feed">
+    </div>
+  </div>
+
+</div>
+
+<script>
+let lastSnapshotFile = null;
+let alertAcknowledged = true;
+
+function playAlertSound() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 900;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 300);
+}
+
+function closeAlert() {
+  document.getElementById("alertBar").classList.add("hidden");
+  alertAcknowledged = true;
+}
+
+setInterval(() => {
+  fetch('/api/snapshots')
+    .then(r => r.json())
+    .then(d => {
+
+      document.getElementById('detectionCount').innerText =
+        `${d.length} Detections`;
+      document.getElementById('totalCount').innerText = d.length;
+
+      if (!d.length) return;
+
+      const latest = d[0];
+
+      if (latest.file !== lastSnapshotFile && alertAcknowledged) {
+        lastSnapshotFile = latest.file;
+        alertAcknowledged = false;
+
+        document.getElementById('dangerText').innerText = latest.label;
+
+        document.getElementById("alertMessage").innerText =
+          `${latest.label} detected at Camera 1 - Main Entrance at ${latest.time}`;
+
+        document.getElementById("alertBar").classList.remove("hidden");
+        playAlertSound();
+      }
+    });
+}, 2000);
+</script>
+
+{% endblock %}

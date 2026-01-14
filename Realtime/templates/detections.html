@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detection History</h2>
+
+<div id="historyGrid" class="history-grid"></div>
+
+<script>
+Promise.all([
+  fetch('/api/snapshots').then(r=>r.json()),
+  fetch('/api/normal_detections').then(r=>r.json())
+]).then(([weapons, normals]) => {
+
+  const grid = document.getElementById('historyGrid');
+
+  weapons.forEach(d => {
+    grid.innerHTML += `
+      <div class="history-card">
+        <div class="img-box">
+          <img src="/static/snapshots/${d.file}">
+          <span class="tag">${d.label}</span>
+        </div>
+        <div class="meta">
+          <span>${d.time}</span>
+          <span>Dangerous Object</span>
+        </div>
+      </div>
+    `;
+  });
+
+  normals.forEach(d => {
+    grid.innerHTML += `
+      <div class="history-card">
+        <div class="meta">
+          <strong>${d.label}</strong>
+          <span>${d.time}</span>
+          <span>Normal Object</span>
+        </div>
+      </div>
+    `;
+  });
+
+});
+</script>
+
+{% endblock %}

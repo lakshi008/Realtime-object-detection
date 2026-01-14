@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Secure Login</h2>
+    <p>Authorized access only</p>
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="POST">
+      <input name="username" placeholder="Username" required>
+      <input name="password" type="password" placeholder="Password" required>
+      <button class="btn green">Login</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

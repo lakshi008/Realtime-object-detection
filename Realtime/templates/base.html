@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Surveillance Detection System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='ui.js') }}" defer></script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="shield"></span>
+    <div>
+      <h1>Surveillance Detection System</h1>
+      <p>Real-time dangerous object monitoring</p>
+    </div>
+  </div>
+
+  {% if session.get("logged_in") %}
+  <div class="top-actions">
+    <span class="badge" id="detectionCount">0 Detections</span>
+    <a class="btn blue" href="/detections">View History</a>
+    <span class="status green">Monitoring Active</span>
+  </div>
+  {% endif %}
+</header>
+
+<nav class="nav">
+  {% if session.get("logged_in") %}
+  <a href="/home">Home</a>
+  <a href="/detections">Detections</a>
+  <a href="/settings">Settings</a>
+  <a href="/logout" class="right">Logout</a>
+  {% endif %}
+</nav>
+
+<main class="container">
+  {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

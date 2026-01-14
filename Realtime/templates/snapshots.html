@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Weapon Snapshots</h2>
+<div id="grid"></div>
+
+<script>
+fetch('/api/snapshots').then(r=>r.json()).then(data=>{
+  document.getElementById('grid').innerHTML = data.map(d=>`
+    <div class="history-card">
+      <img src="/static/snapshots/${d.file}">
+      <div>${d.label} - ${d.time}</div>
+    </div>
+  `).join('');
+});
+</script>
+
+{% endblock %}
